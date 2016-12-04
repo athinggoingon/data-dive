@@ -1,0 +1,37 @@
+** Create a database and user
+
+$ brew install mongodb
+
+$ mongo admin resources/scripts/create-users.js
+
+** Import the data
+
+Note: On Mac, I had to first open each .csv file in Excel and save
+them using the "Windows Comma Separated" format by clicking File, Save
+As, and selecting "Windows Comma Separated (.csv)" from the Format
+drop-down.
+
+$ mongoimport -d DataKind -c homeless --type csv --file homeless-shelters.csv --headerline
+
+$ mongoimport -d DataKind -c cyf --type csv --file cyf.csv --headerline
+
+$ mongoimport -d DataKind -c behav --type csv --file behavioral-health-services.csv --headerline
+
+$ mongoimport -d DataKind -c abscondence --type csv --file rp-abscondence-clean.csv --headerline
+
+$ mongoimport -d DataKind -c placements --type csv --file rp-placements-clean.csv --headerline
+** Use the db namespace to query the data
+data-dive.db> (count (get-maps "cyf" :conditions {:GENDER "Female"}))
+;; => 35374
+
+data-dive.db> (count (get-maps "cyf" :conditions {:AGE {"$lte" 16}}))
+;; => 22898
+
+data-dive.db> (count (get-maps "cyf"))
+;; => 76790
+
+data-dive.db> (count (get-maps "behav"))
+;; => 1003167
+
+data-dive.db> (count (get-maps "homeless"))
+;; => 30362
